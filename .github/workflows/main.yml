@@ -8,9 +8,7 @@ on:
 
 env:
   REGISTRY: "registry.digitalocean.com/raga463-registry"
-  IMAGE_NAME: "flask-app-rg"
-  USER_TOKEN: ${{ secrets.USERNAME }}
-  PASSWORD_TOKEN: ${{ secrets.PASSWORD }}
+  IMAGE_NAME: "flask-app-wim"
 
 jobs:
   build_and_push:
@@ -37,12 +35,10 @@ jobs:
   deploy:
     needs: build_and_push
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
-        env:
-          USER_TOKEN: ${{ env.USERNAME }}
-          PASSWORD_TOKEN: ${{ env.PASSWORD }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -51,7 +47,7 @@ jobs:
           port: 22
           script: |
             # login docker
-            echo $PASSWORD_TOKEN | docker registry.digitalocean.com login -u $USER_TOKEN --password-stdin 
+            docker login -u $DOCKER_USER -p $DOCKER_PASSWORD registry.digitalocean.com
 
             # Run a new container from a new image
             docker run -d \
