@@ -47,7 +47,7 @@ jobs:
           port: 22
           script: |
             # login docker
-            docker login --username $DOCKER_USER --password-stdin $DOCKER_PASSWORD registry.digitalocean.com
+            docker login --username ${{ secrets.USERNAME }} --password-stdin ${{ secrets.PASSWORD }} registry.digitalocean.com
 
             # Run a new container from a new image
             docker run -d \
